@@ -9,5 +9,5 @@ func (cache *myCache) Get(key string) (interface{}, error) {
 		return nil, ErrKeyNotFound
 	}
 
-	return item, nil
+	return item.data, nil
 }
