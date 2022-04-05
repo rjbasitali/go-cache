@@ -7,9 +7,10 @@ import (
 )
 
 type myCache struct {
-	mutex       sync.Mutex
-	items       map[string]*value
-	expireAfter int64
+	mutex        sync.Mutex
+	items        map[string]*value
+	expireAfter  int64
+	decisionFunc func(v interface{}) bool
 }
 
 func NewCache() Cache {
@@ -18,10 +19,11 @@ func NewCache() Cache {
 	}
 }
 
-func NewCacheWithSweeper(interval, expireAfter time.Duration) Cache {
+func NewCacheWithSweeper(interval, expireAfter time.Duration, decisionFunc func(v interface{}) bool) Cache {
 	c := &myCache{
-		items:       make(map[string]*value),
-		expireAfter: expireAfter.Nanoseconds(),
+		items:        make(map[string]*value),
+		expireAfter:  expireAfter.Nanoseconds(),
+		decisionFunc: decisionFunc,
 	}
 
 	if interval > 0 && expireAfter > 0 {
