@@ -11,6 +11,7 @@ type myCache struct {
 	items        map[string]*value
 	expireAfter  int64
 	decisionFunc func(v interface{}) bool
+	onEviction   func(k string, v interface{})
 }
 
 func NewCache() Cache {
@@ -19,11 +20,13 @@ func NewCache() Cache {
 	}
 }
 
-func NewCacheWithSweeper(interval, expireAfter time.Duration, decisionFunc func(v interface{}) bool) Cache {
+func NewCacheWithSweeper(interval, expireAfter time.Duration,
+	decisionFunc func(v interface{}) bool, onEviction func(k string, v interface{})) Cache {
 	c := &myCache{
 		items:        make(map[string]*value),
 		expireAfter:  expireAfter.Nanoseconds(),
 		decisionFunc: decisionFunc,
+		onEviction:   onEviction,
 	}
 
 	if interval > 0 && expireAfter > 0 {
