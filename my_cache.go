@@ -1,7 +1,6 @@
 package gocache
 
 import (
-	"runtime"
 	"sync"
 	"time"
 )
@@ -31,7 +30,7 @@ func NewCacheWithSweeper(interval, expireAfter time.Duration,
 
 	if interval > 0 && expireAfter > 0 {
 		s := newSweeper(c, interval)
-		runtime.SetFinalizer(c, s.stopSweeper)
+		// runtime.SetFinalizer(c, s.stopSweeper)
 		go s.run(c)
 	}
 
